@@ -1,12 +1,6 @@
 import type { ComponentType } from 'react';
-import { Braces, Cpu, PenLine, Sparkles, SquareTerminal, Terminal } from 'lucide-react';
-import {
-  BilibiliIcon,
-  DiscordIcon,
-  GithubIcon,
-  WechatIcon,
-  ZhihuIcon,
-} from './components/icons';
+import { Braces, Cpu, Sparkles, SquareTerminal, Terminal } from 'lucide-react';
+import { WechatIcon } from './components/icons';
 
 /* ---------- 基本信息 ---------- */
 export const profile = {
@@ -58,42 +52,6 @@ export interface Social {
 
 export const socials: Social[] = [
   {
-    id: 'github',
-    label: 'GitHub',
-    handle: 'github.com/你的用户名',
-    icon: GithubIcon,
-    url: 'https://github.com/your-username',
-    hoverGlow: 'hover:border-indigo-400/50 hover:shadow-[0_0_28px_rgba(99,102,241,0.25)]',
-    iconWrap: 'from-indigo-500/25 to-indigo-500/5 text-indigo-600',
-  },
-  {
-    id: 'bilibili',
-    label: '哔哩哔哩',
-    handle: 'space.bilibili.com/你的UID',
-    icon: BilibiliIcon,
-    url: 'https://space.bilibili.com/你的UID',
-    hoverGlow: 'hover:border-pink-400/50 hover:shadow-[0_0_28px_rgba(244,114,182,0.25)]',
-    iconWrap: 'from-pink-500/25 to-pink-500/5 text-pink-600',
-  },
-  {
-    id: 'zhihu',
-    label: '知乎',
-    handle: 'zhihu.com/people/你的ID',
-    icon: ZhihuIcon,
-    url: 'https://www.zhihu.com/people/your-id',
-    hoverGlow: 'hover:border-sky-400/50 hover:shadow-[0_0_28px_rgba(56,189,248,0.25)]',
-    iconWrap: 'from-sky-500/25 to-sky-500/5 text-sky-600',
-  },
-  {
-    id: 'blog',
-    label: '博客',
-    handle: '博客地址待填',
-    icon: PenLine,
-    url: 'https://blog.your-domain.com',
-    hoverGlow: 'hover:border-violet-400/50 hover:shadow-[0_0_28px_rgba(139,92,246,0.25)]',
-    iconWrap: 'from-violet-500/25 to-violet-500/5 text-violet-600',
-  },
-  {
     id: 'wechat',
     label: '微信',
     handle: '悬停显示微信号',
@@ -101,14 +59,5 @@ export const socials: Social[] = [
     reveal: '微信号: 13953830088',
     hoverGlow: 'hover:border-emerald-400/50 hover:shadow-[0_0_28px_rgba(52,211,153,0.25)]',
     iconWrap: 'from-emerald-500/25 to-emerald-500/5 text-emerald-600',
-  },
-  {
-    id: 'discord',
-    label: 'Discord',
-    handle: '悬停显示 ID',
-    icon: DiscordIcon,
-    reveal: '你的用户名#0000',
-    hoverGlow: 'hover:border-blue-400/50 hover:shadow-[0_0_28px_rgba(96,165,250,0.25)]',
-    iconWrap: 'from-blue-500/25 to-blue-500/5 text-blue-600',
   },
 ];

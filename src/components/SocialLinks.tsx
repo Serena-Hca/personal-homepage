@@ -159,7 +159,7 @@ export default function SocialLinks() {
           </span>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3">
           {socials.map((social) => (
             <SocialButton key={social.id} social={social} />
           ))}
