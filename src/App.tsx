@@ -3,7 +3,7 @@ import BentoHobbies from './components/BentoHobbies';
 import CursorGlow from './components/CursorGlow';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
-import NeuralBackground from './components/NeuralBackground';
+import NeuralCathedral from './components/NeuralCathedral';
 import SocialLinks from './components/SocialLinks';
 import { profile } from './data';
 
@@ -11,7 +11,7 @@ export default function App() {
   return (
     <div id="top" className="relative min-h-screen bg-[#F5F7FD] text-slate-900 antialiased">
       <Background />
-      <NeuralBackground />
+      <NeuralCathedral />
       <CursorGlow />
 
       <main className="relative z-10 mx-auto w-full max-w-5xl px-5 pb-16 pt-10 sm:px-8 md:pt-14">
