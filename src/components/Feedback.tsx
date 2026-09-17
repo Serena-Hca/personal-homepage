@@ -1,19 +1,18 @@
 import { useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
 import GlassCard from './GlassCard';
 import SectionHeader from './SectionHeader';
-import { profile } from '../data';
 
-/**
- * 留言板:访客反馈直接发送到 profile.email 邮箱
- * 通过 FormSubmit 静态表单服务(无需后端):
- * - 首次有人提交后,FormSubmit 会给邮箱发一封激活邮件,点一下链接即永久生效
- */
-
-const ENDPOINT = `https://formsubmit.co/ajax/${profile.email}`;
-const MAX_LENGTH = 500;
+const MAX_LENGTH = 2000;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const supabase =
+  supabaseUrl && supabasePublishableKey
+    ? createClient(supabaseUrl, supabasePublishableKey)
+    : null;
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
@@ -22,39 +21,40 @@ const inputCls =
 
 export default function Feedback() {
   const [name, setName] = useState('');
-  const [contact, setContact] = useState('');
+  const [relation, setRelation] = useState('');
+  const [device, setDevice] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const timer = useRef<number | undefined>(undefined);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!message.trim() || status === 'sending') return;
+    if (!message.trim() || !device || status === 'sending') return;
+
     setStatus('sending');
+
     try {
-      const response = await fetch(ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: name.trim() || '匿名访客',
-          contact: contact.trim() || '未留联系方式',
-          message: message.trim(),
-          _subject: `【主页留言】${name.trim() || '匿名访客'}`,
-          _template: 'table',
-          _honey: '',
-        }),
+      if (!supabase) throw new Error('Supabase configuration is missing');
+
+      const { error } = await supabase.from('feedback').insert({
+        name: name.trim() || null,
+        relation: relation || null,
+        device,
+        message: message.trim(),
+        version: 'v3',
       });
-      const data = await response.json();
-      if (!response.ok || (data.success !== true && data.success !== 'true')) {
-        throw new Error('submit failed');
-      }
+
+      if (error) throw error;
+
       setStatus('sent');
       setName('');
-      setContact('');
+      setRelation('');
+      setDevice('');
       setMessage('');
       window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => setStatus('idle'), 8000);
-    } catch {
+    } catch (error) {
+      console.error('反馈提交失败：', error);
       setStatus('error');
     }
   };
@@ -63,9 +63,9 @@ export default function Feedback() {
     <section id="feedback" className="mt-28 scroll-mt-24">
       <SectionHeader
         index="04"
-        zh="留言板"
-        title="给我留言"
-        subtitle="对主页有什么建议、想交流什么话题,写在这里 —— 提交后会直接发到我的邮箱。"
+        zh="反馈"
+        title="给我反馈"
+        subtitle="如果你发现看不懂、不好找或不方便使用的地方，欢迎告诉我。反馈不会公开，只有我能看到。"
       />
 
       <GlassCard className="p-5 sm:p-8" delay={0.1}>
@@ -86,8 +86,8 @@ export default function Feedback() {
               >
                 <CheckCircle2 className="h-12 w-12 text-emerald-500" />
               </motion.div>
-              <p className="font-display text-lg font-semibold text-slate-900">已收到你的留言!</p>
-              <p className="text-sm text-slate-600">感谢你的反馈,我会尽快查看并回复。</p>
+              <p className="font-display text-lg font-semibold text-slate-900">已收到你的反馈！</p>
+              <p className="text-sm text-slate-600">感谢你的建议，我会认真查看。</p>
             </motion.div>
           ) : (
             <motion.form
@@ -98,41 +98,64 @@ export default function Feedback() {
               exit={{ opacity: 0 }}
               className="space-y-4"
             >
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-slate-600">
-                    称呼(选填)
-                  </span>
+                  <span className="mb-1.5 block text-xs font-medium text-slate-600">称呼（选填）</span>
                   <input
                     type="text"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="怎么称呼你?"
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="怎么称呼你？"
                     className={inputCls}
                   />
                 </label>
+
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-medium text-slate-600">
-                    联系方式(选填)
-                  </span>
-                  <input
-                    type="text"
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                    placeholder="邮箱 / 微信 / QQ,方便我回复"
+                  <span className="mb-1.5 block text-xs font-medium text-slate-600">与我的关系（选填）</span>
+                  <select
+                    value={relation}
+                    onChange={(event) => setRelation(event.target.value)}
                     className={inputCls}
-                  />
+                  >
+                    <option value="">请选择</option>
+                    <option value="同学">同学</option>
+                    <option value="老师">老师</option>
+                    <option value="家人">家人</option>
+                    <option value="朋友">朋友</option>
+                    <option value="同事">同事</option>
+                    <option value="其他">其他</option>
+                    <option value="不便透露">不便透露</option>
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-slate-600">使用设备</span>
+                  <select
+                    value={device}
+                    onChange={(event) => setDevice(event.target.value)}
+                    required
+                    className={inputCls}
+                  >
+                    <option value="">请选择</option>
+                    <option value="电脑">电脑</option>
+                    <option value="手机">手机</option>
+                    <option value="平板">平板</option>
+                    <option value="其他">其他</option>
+                  </select>
                 </label>
               </div>
 
               <label className="block">
-                <span className="mb-1.5 block text-xs font-medium text-slate-600">留言内容</span>
+                <span className="mb-1.5 block text-xs font-medium text-slate-600">反馈内容</span>
                 <textarea
                   value={message}
-                  onChange={(e) => setMessage(e.target.value.slice(0, MAX_LENGTH))}
-                  rows={4}
+                  onChange={(event) => {
+                    setMessage(event.target.value.slice(0, MAX_LENGTH));
+                    if (status === 'error') setStatus('idle');
+                  }}
+                  rows={5}
                   required
-                  placeholder="写下你想说的话…"
+                  placeholder="请描述具体位置、体验或遇到的问题…"
                   className={`${inputCls} resize-none`}
                 />
                 <span className="mt-1 block text-right font-mono text-[10px] text-slate-400">
@@ -142,7 +165,7 @@ export default function Feedback() {
 
               {status === 'error' && (
                 <p className="rounded-xl border border-rose-300/40 bg-rose-500/10 px-4 py-2.5 text-xs text-rose-600">
-                  发送失败,请稍后再试 —— 也可以直接发邮件给我:{profile.email}
+                  提交失败，已保留填写内容，请稍后重试。
                 </p>
               )}
 
@@ -154,12 +177,12 @@ export default function Feedback() {
                 {status === 'sending' ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    发送中…
+                    提交中…
                   </>
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
-                    发送留言
+                    提交反馈
                   </>
                 )}
               </button>
