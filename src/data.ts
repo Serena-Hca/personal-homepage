@@ -12,8 +12,8 @@ export const profile = {
   location: '中国天津',
   bio: '大家好，我是何储安，来自天津大学香港理工大学深圳未来技术学院智能医学工程专业的大一新生。我热爱摄影、探索新鲜事物，我希望在大学生活中能够不断充实自己，结交志同道合的朋友，获得一个更加优秀的自己。',
   email: 'heyuyao2018@126.com',
-  /** 头像:把图片放到 public/avatar.jpg,然后改成 '/avatar.jpg' */
-  avatar: '/avatar.jpg',
+  /** 头像文件位于 public/avatar.jpg，自动适配本地与 GitHub Pages 部署路径 */
+  avatar: `${import.meta.env.BASE_URL}avatar.jpg`,
   status: '欢迎交流合作',
 };
 
