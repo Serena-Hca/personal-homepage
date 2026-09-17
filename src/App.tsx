@@ -1,6 +1,7 @@
 import Background from './components/Background';
 import BentoHobbies from './components/BentoHobbies';
 import CursorGlow from './components/CursorGlow';
+import Feedback from './components/Feedback';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import NeuralCathedral from './components/NeuralCathedral';
@@ -35,6 +36,7 @@ export default function App() {
         <Hero />
         <BentoHobbies />
         <SocialLinks />
+        <Feedback />
         <Footer />
       </main>
     </div>
