@@ -5,14 +5,11 @@ import {
   FileText,
   Globe,
   Headphones,
-  Music2,
 } from 'lucide-react';
+import { profile } from '../data';
 import GlassCard from './GlassCard';
 import PhotoGallery from './PhotoGallery';
 import SectionHeader from './SectionHeader';
-
-/** 均衡器柱子高度 */
-const EQ_BARS = [0.9, 0.55, 1, 0.65, 0.8, 0.45, 0.7];
 
 function Chip({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
   return (
@@ -52,29 +49,28 @@ export default function BentoHobbies() {
               每一次调试与通宵的专属背景音乐。
             </p>
 
-            {/* 迷你"正在播放" + 均衡器动画 */}
-            <div className="mt-4 flex items-center gap-3 rounded-xl border border-slate-900/5 bg-slate-900/5 p-3">
-              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-cyan-400 shadow-[0_0_18px_rgba(139,92,246,0.45)]">
-                <Music2 className="h-4.5 w-4.5 text-white" />
-                <span className="absolute -right-0.5 -top-0.5 h-2 w-2 animate-pulse rounded-full border-2 border-white bg-emerald-400" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium text-slate-800">
-                  合成器浪潮 & Lo-fi 节拍
-                </p>
-                <p className="truncate font-mono text-[10px] text-slate-500">
-                  官方指定「写代码时听」歌单
-                </p>
-              </div>
-              <div className="flex h-6 items-end gap-[3px]" aria-hidden="true">
-                {EQ_BARS.map((height, i) => (
-                  <span
-                    key={i}
-                    className="w-[3px] origin-bottom animate-eq rounded-full bg-gradient-to-t from-indigo-500 to-cyan-400"
-                    style={{ height: `${height * 100}%`, animationDelay: `${i * 0.13}s` }}
-                  />
-                ))}
-              </div>
+            {/* 网易云音乐外链播放器 */}
+            <div className="mt-4 rounded-xl border border-slate-900/5 bg-white/60 p-3">
+              <iframe
+                title="网易云音乐播放器"
+                src={`https://music.163.com/outchain/player?type=2&id=${profile.neteaseSongId}&auto=0&height=66`}
+                width="330"
+                height="66"
+                loading="lazy"
+                style={{ border: 0 }}
+                className="block w-full max-w-[330px]"
+              />
+              <p className="mt-1.5 font-mono text-[10px] text-slate-400">
+                若无法播放可能是版权限制,可{' '}
+                <a
+                  href={`https://music.163.com/#/song?id=${profile.neteaseSongId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-500 transition-colors hover:underline"
+                >
+                  在网易云打开
+                </a>
+              </p>
             </div>
           </div>
         </GlassCard>
