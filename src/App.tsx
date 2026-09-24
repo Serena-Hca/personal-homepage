@@ -1,6 +1,7 @@
 import Background from './components/Background';
 import BentoHobbies from './components/BentoHobbies';
 import CursorGlow from './components/CursorGlow';
+import DigitalTwin from './components/DigitalTwin';
 import Feedback from './components/Feedback';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
@@ -37,6 +38,7 @@ export default function App() {
         <BentoHobbies />
         <SocialLinks />
         <Feedback />
+        <DigitalTwin />
         <Footer />
       </main>
     </div>
