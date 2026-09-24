@@ -11,6 +11,7 @@ import {
   Server,
 } from 'lucide-react';
 import GlassCard from './GlassCard';
+import PhotoGallery from './PhotoGallery';
 import SectionHeader from './SectionHeader';
 
 /** 均衡器柱子高度 */
@@ -148,11 +149,7 @@ export default function BentoHobbies() {
             <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
               离开键盘,用相机追逐好光线,记录生活里的每一个瞬间。
             </p>
-            <div className="mt-4 rounded-xl border border-slate-900/5 bg-white/60 p-4 text-center transition-colors duration-300 hover:border-cyan-500/50">
-              <Camera className="mx-auto h-5 w-5 text-cyan-600" />
-              <p className="mt-1.5 text-xs font-medium text-slate-800">摄影</p>
-              <p className="font-mono text-[10px] text-slate-500">追逐黄金时刻的好光线</p>
-            </div>
+            <PhotoGallery />
           </div>
         </GlassCard>
       </div>
