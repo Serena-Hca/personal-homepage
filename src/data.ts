@@ -35,6 +35,33 @@ export const tags: Tag[] = [
   { label: '学习探索中', icon: Sparkles, live: true },
 ];
 
+/* ---------- 日常分享 ---------- */
+export interface Moment {
+  /** 日期(自由格式,如 2026.09) */
+  date: string;
+  /** 文字内容 */
+  text: string;
+  /** 可选配图:public 里的路径,如 'photos/photo-1.jpg' */
+  photo?: string;
+}
+
+export const moments: Moment[] = [
+  {
+    date: '2026.09',
+    text: '【示例·待替换】最近在忙什么?把这里换成你的真实日常:开学、军训、社团、课程、实验、摄影出行……',
+    photo: 'photos/photo-1.jpg',
+  },
+  {
+    date: '2026.09',
+    text: '【示例·待替换】第二条日常:读了什么书、循环了什么歌、去哪里拍了照……',
+    photo: 'photos/photo-2.jpg',
+  },
+  {
+    date: '2026.09',
+    text: '【示例·待替换】第三条日常:近期的目标或计划,或者想对来访的朋友说的话……',
+  },
+];
+
 /* ---------- 社交链接 ---------- */
 export interface Social {
   id: string;
