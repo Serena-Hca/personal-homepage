@@ -137,7 +137,7 @@ export default function SocialLinks() {
   return (
     <section id="contact" className="mt-28 scroll-mt-24">
       <SectionHeader
-        index="04"
+        index="03"
         zh="社交连接"
         title="联系我"
         subtitle="全网都能找到我 —— 或者直接发邮件。欢迎约黑客松、学习小组和开源合作。"

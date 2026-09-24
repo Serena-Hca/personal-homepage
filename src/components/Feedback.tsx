@@ -62,7 +62,7 @@ export default function Feedback() {
   return (
     <section id="feedback" className="mt-28 scroll-mt-24">
       <SectionHeader
-        index="05"
+        index="04"
         zh="反馈"
         title="给我反馈"
         subtitle="如果你发现看不懂、不好找或不方便使用的地方，欢迎告诉我。反馈不会公开，只有我能看到。"
