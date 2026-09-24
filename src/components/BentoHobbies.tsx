@@ -3,12 +3,9 @@ import {
   BookOpen,
   Camera,
   FileText,
-  Gamepad2,
   Globe,
   Headphones,
-  Keyboard,
   Music2,
-  Server,
 } from 'lucide-react';
 import GlassCard from './GlassCard';
 import PhotoGallery from './PhotoGallery';
@@ -37,31 +34,6 @@ export default function BentoHobbies() {
       />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
-        {/* 🎮 Gaming & Tech */}
-        <GlassCard className="md:col-span-3" delay={0}>
-          <div className="p-6">
-            <div className="flex items-start justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-indigo-500/25 to-violet-500/5">
-                <Gamepad2 className="h-5 w-5 text-indigo-600" />
-              </span>
-              <span className="font-mono text-[10px] tracking-[0.25em] text-slate-400">
-                游戏 · 折腾 · 创造
-              </span>
-            </div>
-            <h3 className="mt-4 font-display text-lg font-semibold text-slate-900">
-              游戏与科技
-            </h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
-              像素风独立游戏、7×24 小时运行的家庭服务器,以及对机械键盘日益增长的痴迷。
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Chip icon={Gamepad2} label="独立游戏" />
-              <Chip icon={Server} label="家庭服务器" />
-              <Chip icon={Keyboard} label="机械键盘" />
-            </div>
-          </div>
-        </GlassCard>
-
         {/* 🎧 Music / Audio */}
         <GlassCard className="md:col-span-3" delay={0.08}>
           <div className="p-6">
@@ -108,7 +80,7 @@ export default function BentoHobbies() {
         </GlassCard>
 
         {/* 📚 Reading & Sci-Fi */}
-        <GlassCard className="md:col-span-2" delay={0.16}>
+        <GlassCard className="md:col-span-3" delay={0.16}>
           <div className="flex h-full flex-col p-6">
             <div className="flex items-start justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-cyan-500/25 to-indigo-500/5">
@@ -133,7 +105,7 @@ export default function BentoHobbies() {
         </GlassCard>
 
         {/* 📷 生活与爱好 */}
-        <GlassCard className="md:col-span-4" delay={0.24}>
+        <GlassCard className="md:col-span-6" delay={0.24}>
           <div className="p-6">
             <div className="flex items-start justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-cyan-500/25 to-indigo-500/5">

@@ -38,7 +38,7 @@ export default function PhotoGallery() {
   return (
     <>
       {/* 缩略图网格 */}
-      <div className="mt-4 grid grid-cols-2 gap-2.5">
+      <div className="mt-4 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         {PHOTOS.map((photo, i) => (
           <button
             key={photo.src}
