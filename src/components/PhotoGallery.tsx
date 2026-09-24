@@ -37,8 +37,8 @@ export default function PhotoGallery() {
 
   return (
     <>
-      {/* 缩略图网格 */}
-      <div className="mt-4 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+      {/* 缩略图网格(收窄居中,与卡片整体协调) */}
+      <div className="mx-auto mt-4 grid w-full max-w-3xl grid-cols-2 gap-3 lg:grid-cols-4">
         {PHOTOS.map((photo, i) => (
           <button
             key={photo.src}
@@ -57,6 +57,9 @@ export default function PhotoGallery() {
           </button>
         ))}
       </div>
+      <p className="mt-2.5 text-center font-mono text-[10px] text-slate-400">
+        点击照片查看大图
+      </p>
 
       {/* 大图查看(portal 到 body,避免被卡片 overflow 裁剪) */}
       {createPortal(
