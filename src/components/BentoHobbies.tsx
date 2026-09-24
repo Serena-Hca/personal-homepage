@@ -1,9 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import {
-  Bike,
   BookOpen,
   Camera,
-  Dumbbell,
   FileText,
   Gamepad2,
   Globe,
@@ -133,38 +131,27 @@ export default function BentoHobbies() {
           </div>
         </GlassCard>
 
-        {/* 🏃 Life & Sports */}
+        {/* 📷 生活与爱好 */}
         <GlassCard className="md:col-span-4" delay={0.24}>
           <div className="p-6">
             <div className="flex items-start justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-emerald-500/25 to-cyan-500/5">
-                <Dumbbell className="h-5 w-5 text-emerald-600" />
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-cyan-500/25 to-indigo-500/5">
+                <Camera className="h-5 w-5 text-cyan-600" />
               </span>
               <span className="font-mono text-[10px] tracking-[0.25em] text-slate-400">
                 线下 · 生活
               </span>
             </div>
             <h3 className="mt-4 font-display text-lg font-semibold text-slate-900">
-              生活与运动
+              生活与爱好
             </h3>
             <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
-              离开键盘:骑上单车探索城市、用相机追逐好光线,以及(基本)不缺席的健身打卡。
+              离开键盘,用相机追逐好光线,记录生活里的每一个瞬间。
             </p>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {[
-                { icon: Bike, label: '城市骑行', sub: '周末路线' },
-                { icon: Camera, label: '摄影', sub: '黄金时刻' },
-                { icon: Dumbbell, label: '健身', sub: '每周三次' },
-              ].map(({ icon: Icon, label, sub }) => (
-                <div
-                  key={label}
-                  className="rounded-xl border border-slate-900/5 bg-white/60 p-3 text-center transition-colors duration-300 hover:border-cyan-500/50"
-                >
-                  <Icon className="mx-auto h-4 w-4 text-cyan-600" />
-                  <p className="mt-1.5 text-xs font-medium text-slate-800">{label}</p>
-                  <p className="font-mono text-[10px] text-slate-500">{sub}</p>
-                </div>
-              ))}
+            <div className="mt-4 rounded-xl border border-slate-900/5 bg-white/60 p-4 text-center transition-colors duration-300 hover:border-cyan-500/50">
+              <Camera className="mx-auto h-5 w-5 text-cyan-600" />
+              <p className="mt-1.5 text-xs font-medium text-slate-800">摄影</p>
+              <p className="font-mono text-[10px] text-slate-500">追逐黄金时刻的好光线</p>
             </div>
           </div>
         </GlassCard>
