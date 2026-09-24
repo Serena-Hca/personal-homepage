@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -18,10 +18,15 @@ const navBtnCls =
 
 export default function PhotoGallery() {
   const [index, setIndex] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const close = () => setIndex(null);
   const prev = () => setIndex((i) => (i === null ? null : (i + PHOTOS.length - 1) % PHOTOS.length));
   const next = () => setIndex((i) => (i === null ? null : (i + 1) % PHOTOS.length));
+
+  const scrollByOne = (direction: 1 | -1) => {
+    scrollRef.current?.scrollBy({ left: direction * 220, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (index === null) return;
@@ -37,15 +42,18 @@ export default function PhotoGallery() {
 
   return (
     <>
-      {/* 缩略图网格(收窄居中,与卡片整体协调) */}
-      <div className="mx-auto mt-4 grid w-full max-w-3xl grid-cols-2 gap-3 lg:grid-cols-4">
+      {/* 横向照片条:一行排列,可左右滑动 */}
+      <div
+        ref={scrollRef}
+        className="scrollbar-none mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1"
+      >
         {PHOTOS.map((photo, i) => (
           <button
             key={photo.src}
             type="button"
             onClick={() => setIndex(i)}
             aria-label={`查看大图:${photo.alt}`}
-            className="group relative overflow-hidden rounded-xl border border-slate-900/10 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_8px_24px_rgba(8,145,178,0.18)]"
+            className="group relative w-44 shrink-0 snap-start overflow-hidden rounded-xl border border-slate-900/10 transition-all duration-300 hover:border-cyan-500/50 hover:shadow-[0_8px_24px_rgba(8,145,178,0.18)] sm:w-52"
           >
             <img
               src={photo.src}
@@ -57,9 +65,29 @@ export default function PhotoGallery() {
           </button>
         ))}
       </div>
-      <p className="mt-2.5 text-center font-mono text-[10px] text-slate-400">
-        点击照片查看大图
-      </p>
+
+      {/* 滑动提示 + 箭头按钮 */}
+      <div className="mt-3 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          aria-label="向左滚动"
+          onClick={() => scrollByOne(-1)}
+          className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-900/10 bg-white/60 text-slate-500 transition-colors duration-200 hover:border-indigo-500/40 hover:text-indigo-600"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <span className="font-mono text-[10px] text-slate-400">
+          左右滑动查看更多 · 点击照片查看大图
+        </span>
+        <button
+          type="button"
+          aria-label="向右滚动"
+          onClick={() => scrollByOne(1)}
+          className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-900/10 bg-white/60 text-slate-500 transition-colors duration-200 hover:border-indigo-500/40 hover:text-indigo-600"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
 
       {/* 大图查看(portal 到 body,避免被卡片 overflow 裁剪) */}
       {createPortal(

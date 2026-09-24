@@ -45,6 +45,15 @@ body {
   color: #ffffff;
 }
 
+/* 横向照片条:隐藏滚动条但保留滚动能力 */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* 细暗色滚动条 */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #e2e8f0; }
