@@ -34,6 +34,8 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://bipbzkrnxunzbtqtwfym.supabase.co' }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_7opnJQrXhIigZ1X_XC1Fhw_xJ7CLgYX' }}
+          # 数字分身聊天接口(部署在 homepage-cli 项目的 Edge Function,公开地址无密钥)
+          VITE_TWIN_CHAT_URL: ${{ vars.VITE_TWIN_CHAT_URL || 'https://umsghaliioeuvsyfdxve.supabase.co/functions/v1/chat' }}
         run: npm run build
 
       - name: Setup Pages
