@@ -32,7 +32,7 @@ export default function BentoHobbies() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
         {/* 🎧 Music / Audio */}
-        <GlassCard className="md:col-span-3" delay={0.08}>
+        <GlassCard wrapClassName="md:col-span-3" className="h-full" delay={0.08}>
           <div className="p-6">
             <div className="flex items-start justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-violet-500/25 to-cyan-500/5">
@@ -58,9 +58,9 @@ export default function BentoHobbies() {
                 height="66"
                 loading="lazy"
                 style={{ border: 0 }}
-                className="block w-full max-w-[330px]"
+                className="mx-auto block w-full max-w-[330px]"
               />
-              <p className="mt-1.5 font-mono text-[10px] text-slate-400">
+              <p className="mt-1.5 text-center font-mono text-[10px] text-slate-400">
                 若无法播放可能是版权限制,可{' '}
                 <a
                   href={`https://music.163.com/#/song?id=${profile.neteaseSongId}`}
@@ -76,7 +76,7 @@ export default function BentoHobbies() {
         </GlassCard>
 
         {/* 📚 Reading & Sci-Fi */}
-        <GlassCard className="md:col-span-3" delay={0.16}>
+        <GlassCard wrapClassName="md:col-span-3" className="h-full" delay={0.16}>
           <div className="flex h-full flex-col p-6">
             <div className="flex items-start justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-cyan-500/25 to-indigo-500/5">
@@ -101,7 +101,7 @@ export default function BentoHobbies() {
         </GlassCard>
 
         {/* 📷 生活与爱好 */}
-        <GlassCard className="md:col-span-6" delay={0.24}>
+        <GlassCard wrapClassName="md:col-span-6" delay={0.24}>
           <div className="p-6">
             <div className="flex items-start justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-900/10 bg-gradient-to-br from-cyan-500/25 to-indigo-500/5">

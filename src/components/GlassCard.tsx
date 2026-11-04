@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 interface GlassCardProps {
   children: ReactNode;
   className?: string;
+  /** 外层网格项的类(如 md:col-span-3、h-full)——布局类必须加在这,加在 className 上不会生效 */
+  wrapClassName?: string;
   /** 悬停时上浮 4px */
   lift?: boolean;
   /** 卡片内跟随光标的径向聚光 */
@@ -16,6 +18,7 @@ interface GlassCardProps {
 export default function GlassCard({
   children,
   className = '',
+  wrapClassName = '',
   lift = true,
   spotlight = true,
   delay = 0,
@@ -30,12 +33,13 @@ export default function GlassCard({
   };
 
   return (
-    /* 外层:入场 reveal(独立的 transition,避免 delay 影响 hover) */
+    /* 外层:入场 reveal(独立的 transition,避免 delay 影响 hover)+ 网格布局类 */
     <motion.div
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      className={wrapClassName}
     >
       {/* 内层:玻璃样式 + hover 上浮 */}
       <motion.div
