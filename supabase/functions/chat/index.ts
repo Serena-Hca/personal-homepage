@@ -5,10 +5,10 @@
 // 浏览器里翻到并盗用,所以 Key 只存在 Supabase 服务端(secrets),前端永远接触不到。
 //
 // 部署(详见根目录《期末版数字分身升级步骤.md》):
-//   npm install -g supabase                 # 安装 CLI(仅第一次)
-//   supabase login                          # 登录你的 Supabase 账号(仅第一次)
-//   supabase secrets set ZHIPU_API_KEY=你的智谱APIKey
-//   supabase functions deploy chat --project-ref bipbzkrnxunzbtqtwfym
+//   npx supabase login                      # 登录你的 Supabase 账号(仅第一次)
+//   npx supabase secrets set ZHIPU_API_KEY=你的智谱APIKey
+//   npx supabase functions deploy chat --project-ref bipbzkrnxunzbtqtwfym
+// 注:本机不装全局 CLI(全局目录无写权限),统一用 npx 免安装方式。
 // 测试:
 //   curl -X POST https://bipbzkrnxunzbtqtwfym.supabase.co/functions/v1/chat \
 //     -H "Content-Type: application/json" \
