@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import NeuralCathedral from './components/NeuralCathedral';
 import SocialLinks from './components/SocialLinks';
+import TwinSection from './components/TwinSection';
 import { profile } from './data';
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
         <Hero />
         <BentoHobbies />
         <SocialLinks />
+        <TwinSection />
         <Feedback />
         <DigitalTwin />
         <Footer />
