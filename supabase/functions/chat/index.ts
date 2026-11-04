@@ -72,7 +72,10 @@ function allowRequest(ip: string): boolean {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return json(null, 204);
+  // 注意:204 响应不能带 body,否则 Deno 会抛异常(浏览器 CORS 预检会收到 500)
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
+  }
 
   if (req.method !== 'POST') return json({ error: '仅支持 POST 请求' }, 405);
 
