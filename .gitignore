@@ -1,6 +1,9 @@
 # dependencies
 node_modules
 
+# supabase CLI 临时文件
+supabase/.temp/
+
 # build output
 dist
 
