@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bot, Send, X } from 'lucide-react';
-import { profile, socials } from '../data';
+import { profile } from '../data';
 
 /**
  * 数字分身「小何」:右下角悬浮聊天窗口
- * - 基于关键词规则的问答,信息全部来自 data.ts,无需后端
- * - 想改答案:直接编辑下方 answer() 函数
+ * - 期末版:接入真实大模型(智谱 GLM-4-Flash),回答基于服务端系统提示词里的个人资料
+ * - 调用链:本组件 → Supabase Edge Function(chat)→ 智谱 API;API Key 只存在服务端
+ * - 接口地址在 .env.local 的 VITE_TWIN_CHAT_URL;想改「人设」回答规则,改 supabase/functions/chat/index.ts 里的 SYSTEM_PROMPT
  */
 
 interface Message {
@@ -15,48 +16,22 @@ interface Message {
   text: string;
 }
 
+/** 发给模型的消息格式(OpenAI 兼容) */
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 const QUICK_QUESTIONS = ['你学什么专业?', '怎么加你微信?', '你喜欢什么?', '你的邮箱是?'];
 
-function answer(input: string): string {
-  const q = input.toLowerCase();
-  const has = (...words: string[]) => words.some((w) => q.includes(w));
-  const wechatId = socials.find((s) => s.id === 'wechat')?.reveal?.replace('微信号: ', '') ?? '';
+/** 后端聊天接口地址(构建时从 .env.local 注入,不含任何密钥) */
+const CHAT_URL = import.meta.env.VITE_TWIN_CHAT_URL as string | undefined;
 
-  if (has('你好', 'hello', 'hi', '在吗', '嗨')) {
-    return `你好呀!我是${profile.name}的数字分身 ⚡ 学校、专业、联系方式、爱好,都可以问我。`;
-  }
-  if (has('学校', '大学', '学院', '哪里', '在哪')) {
-    return `我在${profile.university}就读,位于${profile.location}。`;
-  }
-  if (has('专业', '学什么', '医学')) {
-    return `我的专业是${profile.major},对脑机接口这类方向很感兴趣 —— 主页背景的神经元动画就是我的小心思 🧠`;
-  }
-  if (has('微信', '联系', '联系方式', '加我', '加你')) {
-    return `可以加我微信:${wechatId},备注一下来意哦。`;
-  }
-  if (has('邮箱', '邮件', 'email', 'mail')) {
-    return `我的邮箱是 ${profile.email},也可以在主页「联系我」里一键复制。`;
-  }
-  if (has('摄影', '拍照', '照片', '相机')) {
-    return `摄影是我的一大爱好 📷 主页「生活与爱好」里有我的作品,点击还能看大图。`;
-  }
-  if (has('爱好', '喜欢', '兴趣', '平时')) {
-    return `平时喜欢摄影、听歌(最近在听《雪人》驼儿)、看硬核科幻,也爱折腾代码。`;
-  }
-  if (has('留言', '反馈', '建议', '意见')) {
-    return `太好了!主页底部有「给我反馈」板块,写下来我会收到;或者直接发邮件 ${profile.email}。`;
-  }
-  if (has('名字', '叫什么', '你是谁')) {
-    return `我是${profile.name}的数字分身,${profile.major}专业大一新生。有问题尽管问我!`;
-  }
-  if (has('网易云', '音乐', '听歌', '歌')) {
-    return `主页「音乐与音频」卡片里嵌了网易云播放器,现在放的是《雪人》驼儿 🎵`;
-  }
-  if (has('谢谢', '感谢', '3q', 'thx')) {
-    return `不客气!还有问题随时问我 😄`;
-  }
-  return `这个问题把我问住了 😅 你可以去主页底部的「给我反馈」留言,${profile.name}本人看到后会回复你。`;
-}
+/** 带给模型的最大历史消息数,与服务端 MAX_HISTORY_MESSAGES 保持一致 */
+const MAX_HISTORY = 12;
+
+/** 接口出错时的兜底文案 */
+const FALLBACK_TEXT = '分身暂时走神了 😅 稍后再试,或者去主页底部「给我反馈」给何储安留言。';
 
 export default function DigitalTwin() {
   const [open, setOpen] = useState(false);
@@ -70,25 +45,41 @@ export default function DigitalTwin() {
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const idRef = useRef(1);
-  const timerRef = useRef<number | undefined>(undefined);
+  /** 只给模型看的对话历史(不含问候语,与界面消息分开维护) */
+  const historyRef = useRef<ChatMessage[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, typing, open]);
 
-  useEffect(() => () => window.clearTimeout(timerRef.current), []);
-
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || typing) return;
     setMessages((prev) => [...prev, { id: idRef.current++, role: 'user', text: trimmed }]);
     setInput('');
     setTyping(true);
-    timerRef.current = window.setTimeout(() => {
-      setMessages((prev) => [...prev, { id: idRef.current++, role: 'bot', text: answer(trimmed) }]);
+
+    const history = [...historyRef.current, { role: 'user' as const, content: trimmed }].slice(-MAX_HISTORY);
+
+    try {
+      if (!CHAT_URL) throw new Error('VITE_TWIN_CHAT_URL 未配置');
+      const resp = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+      const data = await resp.json();
+      if (!resp.ok || typeof data?.content !== 'string') {
+        throw new Error(data?.error ?? `HTTP ${resp.status}`);
+      }
+      historyRef.current = [...history, { role: 'assistant', content: data.content }];
+      setMessages((prev) => [...prev, { id: idRef.current++, role: 'bot', text: data.content }]);
+    } catch {
+      setMessages((prev) => [...prev, { id: idRef.current++, role: 'bot', text: FALLBACK_TEXT }]);
+    } finally {
       setTyping(false);
-    }, 700 + Math.random() * 500);
+    }
   };
 
   return (
@@ -125,7 +116,7 @@ export default function DigitalTwin() {
                 <p className="text-sm font-semibold text-slate-900">小何 · 数字分身</p>
                 <p className="flex items-center gap-1.5 font-mono text-[10px] text-slate-500">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  在线 · 秒回
+                  在线 · AI 实时回复
                 </p>
               </div>
               <button

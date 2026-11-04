@@ -1,0 +1,3 @@
+# Supabase CLI 配置(仅用于部署 Edge Function)
+# 详细部署步骤见根目录《期末版数字分身升级步骤.md》
+project_id = "bipbzkrnxunzbtqtwfym"
